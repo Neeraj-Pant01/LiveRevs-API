@@ -1,4 +1,4 @@
-const { createRevService, getRevService, getReviews, updateReview } = require("../services/review.service")
+const { createRevService, getRevService, getReviews, updateReview, likeReview, DislikeReview } = require("../services/review.service")
 const createError = require("../utils/error")
 
 exports.createRevController = async (req, res, next) => {
@@ -40,6 +40,26 @@ exports.updateReviewCont = async (req,res,next) =>{
             const response = await updateReview(req.params.id,req.body, req.user)
         if(!response) return next(createError("review not found !", 404))
             res.status(200).json(response)
+    }catch(err){
+        next(err)
+    }
+}
+
+exports.likeRevCont = async (req,res,next) =>{
+    try{
+        const response = await likeReview(req.params.id, req.user.userId)
+        if(!response) return next(createError("review not found !", 404));
+        res.status(200).json(response);
+    }catch(err){
+        next(err)
+    }
+}
+
+exports.dislikeRevCont = async (req,res,next) =>{
+    try{
+        const response = await DislikeReview(req.params.id,req.user.userId);
+        if(!response) return next(createError('review not found !', 404));
+        res.status(200).json(response);
     }catch(err){
         next(err)
     }

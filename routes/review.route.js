@@ -1,5 +1,5 @@
-const { createRevController, getAreview, getAllReviews, updateReviewCont } = require("../controllers/review.controller");
-const { addReviewLimiter } = require("../middlewares/limiter");
+const { createRevController, getAreview, getAllReviews, updateReviewCont, likeRevCont, dislikeRevCont } = require("../controllers/review.controller");
+const { addReviewLimiter, likeLimiter } = require("../middlewares/limiter");
 const { verifyToken } = require("../middlewares/verifyToken");
 
 const router = require("express").Router();
@@ -199,5 +199,73 @@ router.get('/',getAllReviews)
  *         description: Review not found
  */
 router.patch('/:id',addReviewLimiter, verifyToken, updateReviewCont)
+
+
+/**
+ * @swagger
+ * /review/{id}/like:
+ *   patch:
+ *     summary: Like a review
+ *     tags: [Reviews]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID of the review to like
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Review liked successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Review'
+ *       404:
+ *         description: Review not found
+ *       401:
+ *         description: Unauthorized
+ *       500:
+ *         description: Server error
+ */
+router.patch('/:id/like',likeLimiter, verifyToken, likeRevCont)
+
+
+
+/**
+ * @swagger
+ * /review/{id}/dislike:
+ *   patch:
+ *     summary: Dislike a review (remove like)
+ *     tags: [Reviews]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID of the review to dislike
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Review disliked successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Review'
+ *       400:
+ *         description: You have not liked this review yet
+ *       404:
+ *         description: Review not found
+ *       401:
+ *         description: Unauthorized
+ *       500:
+ *         description: Server error
+ */
+router.patch('/:id/dislike', likeLimiter, verifyToken, dislikeRevCont)
+
 
 module.exports = router;

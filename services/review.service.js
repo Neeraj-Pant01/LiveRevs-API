@@ -1,3 +1,4 @@
+const { default: mongoose } = require("mongoose");
 const reviewModel = require("../models/reviews.model");
 
 exports.createRevService = async (userId, data) => {
@@ -75,5 +76,28 @@ exports.likeReview = async (revId, userId) =>{
     })
     return rev;
 }
+
+exports.DislikeReview = async (revId, userId) => {
+  const updatedRev = await reviewModel.findOneAndUpdate(
+    {
+      _id: revId,
+      likes: new mongoose.Types.ObjectId(userId),
+    },
+    {
+      $pull: { likes: new mongoose.Types.ObjectId(userId) },
+    },
+    {
+      new: true,
+      runValidators: true,
+    }
+  );
+
+  if (!updatedRev) {
+    throw new Error("You have not liked this review yet");
+  }
+
+  return updatedRev;
+};
+
 
 

@@ -38,3 +38,9 @@ exports.commentLimiter = rateLimit({
   message: "Too many comments. Try again in a minute."
 });
 
+exports.likeLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 10,
+  message: "Too many likes. Try again in a minute."
+});
+

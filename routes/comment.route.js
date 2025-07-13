@@ -1,7 +1,6 @@
-const { addCommentController, updateCommentController, deleteCommentController, likeDislikeCommentController, getRepliesForCommentCont } = require("../controllers/commentController");
+const { addCommentController, updateCommentController, deleteCommentController, likeDislikeCommentController, getRepliesForCommentCont, getTopLevelCommentsCont } = require("../controllers/commentController");
 const { commentLimiter } = require("../middlewares/limiter");
 const { verifyToken } = require("../middlewares/verifyToken");
-const { getTopLevelComments } = require("../services/comment.service");
 const router = require("express").Router();
 
 /**
@@ -156,7 +155,7 @@ router.patch('/:id/like', verifyToken, likeDislikeCommentController)
 
 /**
  * @swagger
- * /review/{reviewId}:
+ * /comments/review/{reviewId}:
  *   get:
  *     summary: Get top-level comments for a review (paginated)
  *     tags: [Comments]
@@ -198,12 +197,12 @@ router.patch('/:id/like', verifyToken, likeDislikeCommentController)
  *                   items:
  *                     $ref: '#/components/schemas/Comment'
  */
-router.get('/review/:reviewId',commentLimiter,getTopLevelComments)
+router.get('/review/:reviewId',commentLimiter,getTopLevelCommentsCont)
 
 
 /**
  * @swagger
- * /replies/{parentId}:
+ * /comments/replies/{parentId}:
  *   get:
  *     summary: Get replies to a specific comment
  *     tags: [Comments]

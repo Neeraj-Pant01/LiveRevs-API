@@ -4,7 +4,7 @@ const createError = require("../utils/error")
 exports.addCommentController = async (req, res, next) => {
     try {
         if (!req.user) return next(createError('Login to add comment !', 403))
-        console.log(req.params.id)
+        // console.log(req.params.id)
         const response = await addComment(req.params.id, req.user, req.body)
         if (!response) return next(createError('Comment not added !', 404))
         res.status(200).json(response);
