@@ -66,4 +66,14 @@ exports.updateReview = async (revId, updatedData, user) =>{
     return review;
 }
 
+exports.likeReview = async (revId, userId) =>{
+    const rev = await reviewModel.findByIdAndUpdate(revId, {
+        $addToSet :{likes: userId}
+    },{
+        new:true,
+        runValidators:true
+    })
+    return rev;
+}
+
 
